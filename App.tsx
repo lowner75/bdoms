@@ -15,10 +15,10 @@ export default function App() {
 
   useEffect(() => {
     if (Platform.OS === 'android') {
-      NavigationBar.setBackgroundColorAsync(colors.background);
+      NavigationBar.setBackgroundColorAsync(colors.backgroundColor);
       NavigationBar.setButtonStyleAsync(theme === 'dark' ? 'light' : 'dark');      
     }
-  }, [colors.background, theme]);
+  }, [colors.backgroundColor, theme]);
 
   return (
     <SafeAreaProvider>
