@@ -44,12 +44,12 @@ export default function SettingsScreen() {
     <ScreenWrapper>
       <ThemedText type="defaultSemiBold" style={{ marginTop: 20 }}>Your Profile Settings</ThemedText>
 
-      <ThemedView style={{ marginTop: 20, borderBottomWidth: 0.5, borderBottomColor: colors.border, paddingBottom: 10 }}>
+      <ThemedView style={{ marginTop: 20, borderBottomWidth: 0.5, borderBottomColor: colors.borderColor, paddingBottom: 10 }}>
         <ThemedText type="label">Full Name:</ThemedText>
         <ThemedText style={{ marginTop: 5 }}>{user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : 'Not Signed In'}</ThemedText>
       </ThemedView>
 
-      <ThemedView style={{ marginTop: 30, borderBottomWidth: 0.5, borderBottomColor: colors.border, paddingBottom: 10 }}>
+      <ThemedView style={{ marginTop: 30, borderBottomWidth: 0.5, borderBottomColor: colors.borderColor, paddingBottom: 10 }}>
         <ThemedText type="label">Email Address:</ThemedText>
         <ThemedText style={{ marginTop: 5 }}>{user?.email ?? 'Not Signed In'}</ThemedText>
       </ThemedView>
@@ -58,12 +58,12 @@ export default function SettingsScreen() {
         <ThemedText type="label">Theme:</ThemedText>
       </ThemedView>
 
-      <ThemedView style={{ marginTop: 5, flexDirection: 'row', alignItems: 'center', borderBottomWidth: 0.6, borderBottomColor: colors.border, paddingBottom: 10 }}>
+      <ThemedView style={{ marginTop: 5, flexDirection: 'row', alignItems: 'center', borderBottomWidth: 0.6, borderBottomColor: colors.borderColor, paddingBottom: 10 }}>
           <ThemedText style={{ flex: 1 }}>{isDark ? 'Dark Mode' : 'Light Mode'}</ThemedText>
           <Switch
             value={isDark}
             onValueChange={handleToggle}
-              thumbColor={isDark ? colors.accent : colors.tabIconDefault} // the circle
+              thumbColor={isDark ? colors.accentColorMuted : colors.tabIconDefault} // the circle
             trackColor={{ false: colors.tabIconDefault + '33', true: colors.tabIconSelected + '33' }} // the background track
           />
         </ThemedView>
@@ -71,7 +71,9 @@ export default function SettingsScreen() {
       <ThemedView style={{ marginTop: 30 }}>
         <ThemedButton
           title="Sign Out"
-          icon={<Ionicons name="log-out-outline" size={20} color={colors.text} />}
+          textStyle={{ color: colors.buttonTextColor }}
+          icon={<Ionicons name="log-out-outline" size={20} color={colors.buttonTextColor} />}
+          style={{ backgroundColor: colors.accentColorMuted }}
           type="accent"
           onPress={handleLogout}
         />
