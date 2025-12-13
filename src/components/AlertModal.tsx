@@ -39,15 +39,15 @@ export const AlertModal: React.FC<AlertModalProps> = ({
       onRequestClose={onClose}
     >
       <ThemedView style={styles.overlay}>
-        <ThemedView style={[styles.container, { backgroundColor: colors.background }]}>
+        <ThemedView style={[styles.container, { backgroundColor: colors.backgroundColor }]}>
           
           {title && (
-            <ThemedText style={[styles.title, { color: colors.text }]}>
+            <ThemedText style={[styles.title, { color: colors.textColor }]}>
               {title}
             </ThemedText>
           )}
 
-          <ThemedText style={[styles.message, { color: colors.text }]}>
+          <ThemedText style={[styles.message, { color: colors.textColor }]}>
             {message}
           </ThemedText>
 

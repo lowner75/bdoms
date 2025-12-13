@@ -73,7 +73,7 @@ export default function LoginScreen() {
 
         <ThemedButton
           title="Login"
-          icon={<Ionicons name="log-in-outline" size={24} color={colors.text} style={{ marginRight: 8 }} />}
+          icon={<Ionicons name="log-in-outline" size={24} color={colors.textColor} style={{ marginRight: 8 }} />}
           type="primary"
           style={{ width: '100%' }}
           onPress={handleLogin}

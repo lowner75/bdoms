@@ -20,7 +20,7 @@ export const ThemedText: React.FC<ThemedTextProps> = ({
 }) => {
   const { theme, colors } = useAppTheme();
 
-  const color = theme === 'dark' ? darkColor ?? colors.text : lightColor ?? colors.text;
+  const color = theme === 'dark' ? darkColor ?? colors.textColor : lightColor ?? colors.textColor ;
 
   return (
     <Text

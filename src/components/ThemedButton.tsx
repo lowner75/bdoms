@@ -35,12 +35,12 @@ export const ThemedButton: React.FC<ThemedButtonProps> = ({
   // Define themed styles for each type
   const typeStyles = {
     primary: {
-      backgroundColor: colors.buttonColor,
-      textColor: colors.text,
+      backgroundColor: colors.buttonBackgroundColor,
+      textColor: colors.textColor,
     },
     accent: {
-      backgroundColor: colors.accent,
-      textColor: colors.text,
+      backgroundColor: colors.accentColor,
+      textColor: colors.textColor,
     },
     danger: {
       backgroundColor: '#D9534F',
@@ -48,7 +48,7 @@ export const ThemedButton: React.FC<ThemedButtonProps> = ({
     },
     link: {
       backgroundColor: 'transparent',
-      textColor: colors.accent,
+      textColor: colors.accentColor,
     },
   };
 

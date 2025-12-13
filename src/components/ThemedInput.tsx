@@ -10,13 +10,13 @@ export function ThemedInput(props: TextInputProps) {
   return (
     <TextInput
       {...props}
-      placeholderTextColor={colors.text}
+      placeholderTextColor={colors.textColor}
       style={[
         styles.input,
         { 
-          backgroundColor: colors.background, 
-          color: colors.text, 
-          borderColor: colors.border 
+          backgroundColor: colors.backgroundColor, 
+          color: colors.textColor, 
+          borderColor: colors.borderColor 
         },
         props.style,
       ]}

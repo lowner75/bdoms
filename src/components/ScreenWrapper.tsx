@@ -27,7 +27,7 @@ export function ScreenWrapper({
   const { theme, colors } = useAppTheme();
 
   const backgroundColor =
-    theme === 'dark' ? darkColor ?? colors.background : lightColor ?? colors.background;
+    theme === 'dark' ? darkColor ?? colors.backgroundColor : lightColor ?? colors.backgroundColor;
 
   return (
     <ThemedView
