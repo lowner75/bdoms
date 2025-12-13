@@ -15,39 +15,39 @@ export function getInvoiceStatusStyles(
 ): InvoiceStatusStyle {
   switch (status) {
     case 'PAIDFULL':
-    case 'PARTPAID':
+    case 'PAIDPART':
+      return {
+        backgroundColor: '#769849',
+        borderColor: 'transparent',
+        textColor: '#ffffff',
+      };
+
+    case 'SENT':
+      return {
+        backgroundColor: '#4d57b1',
+        borderColor: 'transparent',
+        textColor: '#ffffff',
+      };
+
+    case 'DRAFT':
       return {
         backgroundColor: '#ff7d40',
         borderColor: '#ff7d40',
         textColor: '#ffffff',
       };
 
-    case 'SENT':
-      return {
-        backgroundColor: '#796dd7',
-        borderColor: '#796dd7',
-        textColor: '#ffffff',
-      };
-
-    case 'DRAFT':
-      return {
-        backgroundColor: '#ff41d3',
-        borderColor: '#ff41d3',
-        textColor: '#ffffff',
-      };
-
     case 'CREDIT':
       return {
         backgroundColor: '#ff41d3',
-        borderColor: '#ff41d3',
+        borderColor: 'transparent',
         textColor: '#ffffff',
       };
 
     default:
       return {
-        backgroundColor: '#796dd7',
-        borderColor: '#796dd7',
-        textColor: '#ffffff',
+        backgroundColor: '#cececeff',
+        borderColor: 'transparent',
+        textColor: '#000000',
       };
   }
 }
