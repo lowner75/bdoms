@@ -40,12 +40,6 @@ export default function DashboardScreen() {
 }
 
 const styles = StyleSheet.create({
-  loginContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   logo: {
     width: 45,
     height: 45,
