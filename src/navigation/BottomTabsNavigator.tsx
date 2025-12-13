@@ -31,7 +31,7 @@ export default function BottomTabsNavigator() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerStyle: { backgroundColor: colors.headerBackground },
-        headerTintColor: colors.text,
+        headerTintColor: colors.textColor,
         headerTitleAlign: 'left',
         headerTitleStyle: {
           paddingLeft: 4,
@@ -56,7 +56,7 @@ export default function BottomTabsNavigator() {
               iconSize = 19;
               break;
             case 'Orders':
-              iconName = focused ? 'pulse' : 'pulse-outline'; // Or grid or clipboard
+              iconName = focused ? 'cube' : 'cube-outline'; // Or grid, clipboard, pulse, cube
               iconSize = 21;
               break;
             case 'Users':
@@ -90,7 +90,7 @@ export default function BottomTabsNavigator() {
             <Ionicons
               name="chevron-back"
               size={20}
-              color={colors.text}
+              color={colors.textColor}
               style={{ marginTop: 2, marginLeft: 12 }}
             />
           </Pressable>
@@ -109,7 +109,7 @@ export default function BottomTabsNavigator() {
             <Ionicons
               name="chevron-back"
               size={20}
-              color={colors.text}
+              color={colors.textColor}
               style={{ marginTop: 2, marginLeft: 12 }}
             />
           </Pressable>
@@ -128,7 +128,7 @@ export default function BottomTabsNavigator() {
             <Ionicons
               name="chevron-back"
               size={20}
-              color={colors.text}
+              color={colors.textColor}
               style={{ marginTop: 2, marginLeft: 12 }}
             />
           </Pressable>
