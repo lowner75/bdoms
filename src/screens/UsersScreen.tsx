@@ -6,7 +6,7 @@ import { ThemedText } from '../components/ThemedText';
 export default function UsersScreen() {
   return (
     <ScreenWrapper>
-      <ThemedText type="defaultSemiBold" style={{ marginTop: 20 }}>Trade Accounts</ThemedText>
+      <ThemedText type="defaultSemiBold" style={{ marginTop: 20 }}>Trade Account Applications</ThemedText>
     </ScreenWrapper>
   );
 }
