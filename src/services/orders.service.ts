@@ -12,7 +12,8 @@ export interface IOrderSummary {
   dispatchEmailSent: Date,
   goods: number,
   carriage: number,
-  dispatchDate: Date
+  dispatchDate: Date,
+  orderReference: string
 }
 
 export async function fetchActiveOrders(): Promise<IOrderSummary[]> {
