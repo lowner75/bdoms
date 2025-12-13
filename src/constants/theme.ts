@@ -4,35 +4,78 @@ import { Platform } from 'react-native';
 import { DarkTheme as NavigationDarkTheme, DefaultTheme as NavigationLightTheme, Theme as NavigationTheme } from '@react-navigation/native';
 
 // Base colors
+const accentColor = "#ffaf1b";
+const accentColorMuted = "#ff8c0e";
 const tintColorLight = '#11181C';
 const tintColorDark = '#FFFFFF';
+const redColor = '#e43a36';
 
 export const Colors = {
   light: {
-    accent: "#ffaf1b",
-    text: '#11181C',
-    background: '#FFFFFF',
-    tint: tintColorLight,
-    icon: '#687076',
+    // General
+    accentColor: accentColor,
+    accentColorMuted: accentColorMuted,
+    tintColor: tintColorLight,
+    redColor: redColor,
+    backgroundColor: '#FFFFFF',
+    textColor: '#11181C',
+    borderColor: '#E2E2E2',
+    iconColor: '#adadadff',
+    
+    // Card
+    cardBackgroundColor: '#FFFFFF',
+    cardBackgroundColorDarker: '#F9F9F9',
+    cardHeaderBackgroundColor: '#F2F2F2',
+    cardHeaderTextColor: '#11181C',
+    cardBodyBackgroundColor: '#FFFFFF',
+    cardBodyTextColor: '#11181C',
+    cardBorderColor: '#E2E2E2',
+    cardShadowColor: '#00000033',
+
+    // Buttons
+    buttonBackgroundColor: '#E8E8E8',
+    buttonTextColor: '#ffffffff',
+    buttonDisabledBackgroundColor: '#CCCCCC',
+    buttonDisabledTextColor: '#888888',
+
+    // Navigation
     tabIconDefault: '#687076',
     tabIconSelected: tintColorLight,
     tabBarBackground: '#F2F2F2',
     headerBackground: '#F2F2F2',
-    border: '#E2E2E2',
-    buttonColor: '#E8E8E8',
   },
   dark: {
-    accent: "#ffaf1b",
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#666666ff',
+    // General
+    accentColor: accentColor,
+    accentColorMuted: accentColorMuted,
+    tintColor: tintColorDark,
+    redColor: redColor,
+    backgroundColor: '#151718',
+    textColor: '#ECEDEE',
+    borderColor: '#4f5257ff',
+    iconColor: '#666666ff',
+    
+    // Card
+    cardBackgroundColor: '#222527ff',
+    cardBackgroundColorDarker: '#1b1e1fff',
+    cardHeaderBackgroundColor: '#101112',
+    cardHeaderTextColor: '#ECEDEE',
+    cardBodyBackgroundColor: '#1b1e1fff',
+    cardBodyTextColor: '#ECEDEE',
+    cardBorderColor: '#4f5257ff',
+    cardShadowColor: '#00000099',
+
+    // Buttons
+    buttonBackgroundColor: '#26292bff',
+    buttonTextColor: '#ffffffff',
+    buttonDisabledBackgroundColor: '#4f5257ff',
+    buttonDisabledTextColor: '#888888',
+    
+    // Navigation
     tabIconDefault: '#b6b6b6ff',
     tabIconSelected: tintColorDark,
     tabBarBackground: '#101112',
     headerBackground: '#101112',
-    border: '#4f5257ff',
-    buttonColor: '#26292bff',
   },
 };
 
@@ -80,12 +123,13 @@ export const useNavigationTheme = (): NavigationTheme => {
     ...NavigationDarkTheme,
     colors: {
       ...NavigationDarkTheme.colors,
-      background: colors.background,
-      primary: colors.tint,
-      card: colors.headerBackground,
-      text: colors.text,
-      border: colors.tabBarBackground,
-      notification: colors.tint,
+      // Default colours required for React Navigation components
+      background: colors.backgroundColor,
+      card: colors.cardBackgroundColor,
+      text: colors.textColor,
+      border: colors.borderColor,
+      primary: colors.tintColor,
+      notification: colors.tintColor,
     },
   };
 };
