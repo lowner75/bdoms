@@ -56,8 +56,8 @@ export default function BottomTabsNavigator() {
               iconSize = 19;
               break;
             case 'Orders':
-              iconName = focused ? 'grid' : 'grid-outline'; // grid or clipboard so far
-              iconSize = 19;
+              iconName = focused ? 'pulse' : 'pulse-outline'; // Or grid or clipboard
+              iconSize = 21;
               break;
             case 'Users':
               iconName = focused ? 'people' : 'people-outline';
