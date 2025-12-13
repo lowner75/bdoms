@@ -58,7 +58,7 @@ export default function SettingsScreen() {
         <ThemedText type="label">Theme:</ThemedText>
       </ThemedView>
 
-      <ThemedView style={{ marginTop: 5, flexDirection: 'row', alignItems: 'center', borderBottomWidth: 0.5, borderBottomColor: colors.border, paddingBottom: 10 }}>
+      <ThemedView style={{ marginTop: 5, flexDirection: 'row', alignItems: 'center', borderBottomWidth: 0.6, borderBottomColor: colors.border, paddingBottom: 10 }}>
           <ThemedText style={{ flex: 1 }}>{isDark ? 'Dark Mode' : 'Light Mode'}</ThemedText>
           <Switch
             value={isDark}
