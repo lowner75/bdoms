@@ -8,9 +8,10 @@ export type InvoiceStatusStyle = {
 
 export function getInvoiceStatusStyles(
   status: string,
-  colors: {
-    text: string;
-    border: string;
+  // Optional parameter for theme colours 
+  colors?: {
+    textColor: string;
+    borderColor: string;
   }
 ): InvoiceStatusStyle {
   switch (status) {
