@@ -14,6 +14,7 @@ export interface IOrderSummary {
   carriage: number,
   dispatchDate: Date,
   orderReference: string
+  itemLines: Array<{ itemID: string; itemName: string; qty: number; unitCost: number, preorder: number }>;
 }
 
 export async function fetchActiveOrders(): Promise<IOrderSummary[]> {
