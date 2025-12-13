@@ -11,17 +11,19 @@ import { ThemedView } from '../components/ThemedView';
 import { SHIPPING_METHOD_LABELS } from '../constants/shippingMethods';
 import { INVOICE_PAYMENT_STATUS_LABELS } from '../constants/invoicePaymentStatus';
 import { getInvoiceStatusStyles } from '../utils/invoiceStatusStyles';
-import { ThemedButton } from '../components/ThemedButton';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function OrdersScreen() {
-  const { colors, theme } = useAppTheme();
+  const { colors } = useAppTheme();
   const navigation = useNavigation();
   const [orders, setOrders] = useState<IOrderSummary[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const logoDark = require('../../assets/adaptive-icon-cropped.png');
-  const logoLight = require('../../assets/adaptive-icon-cropped-light.png');
+  const [expandedOrders, setExpandedOrders] = useState<{ [id: string]: boolean }>({});
+
+  function toggleOrder(id: number) {
+    setExpandedOrders(prev => ({ ...prev, [id]: !prev[id] }));
+  }
 
   async function loadOrders() {
     setLoading(true);
@@ -46,7 +48,7 @@ export default function OrdersScreen() {
           }}
           style={{ marginRight: 15 }}
         >
-          <Ionicons name="search-outline" size={20} color={colors.text} />
+          <Ionicons name="search-outline" size={20} color={colors.textColor} />
         </Pressable>
       ),
     });
@@ -58,102 +60,231 @@ export default function OrdersScreen() {
   // Dynamic theme-aware styles
   const themeStyles = {
     itemContainer: {
-      //backgroundColor: colors.buttonColor,
-      borderColor: colors.border,
+      borderColor: colors.borderColor,
     },
     itemTitle: {
-      color: colors.text,
+      color: colors.textColor,
     },
   };
   
   function renderItem({ item }: { item: IOrderSummary }) {
     const shippingLabel = SHIPPING_METHOD_LABELS[item.shippingMethod] ?? 'Unknown';
     const invoiceStatusLabel = INVOICE_PAYMENT_STATUS_LABELS[item.invoiceStatus] ?? 'Unknown';
-    const invoiceStyles = getInvoiceStatusStyles(item.invoiceStatus, colors);
+    const invoiceStyles = getInvoiceStatusStyles(item.invoiceStatus);
 
     return (
-      <ThemedView style={[styles.itemContainer, themeStyles.itemContainer ]}>
-        <ThemedView style={[ styles.row, { marginBottom: 6 } ]}>
+      <ThemedView style={[styles.itemContainer, { marginBottom: 10, backgroundColor: colors.cardBackgroundColor }]}>
 
+        {/* Card body */}
+        <View style={styles.cardContent}>
+
+
+          <ThemedView>
+            <View>
+              <ThemedView style={[styles.itemContainer, themeStyles.itemContainer, { backgroundColor: colors.cardBackgroundColor }]}>
+                <ThemedView style={[ styles.row, { marginBottom: 6 } ]}>
+
+                  <ThemedView style={[styles.headerRow]}>
+                    <ThemedView style={{ marginRight: 8, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                      <Ionicons name="cube-outline" size={22} color={colors.textColor} />
+                    </ThemedView>
+                    <ThemedText style={{ fontSize: 16 }}>
+                      Order{' '}
+                      <ThemedText
+                        type="defaultSemiBold"
+                        style={{ color: colors.textColor }}
+                      >
+                        #{item.orderId}
+                      </ThemedText>
+                    </ThemedText>
+                  </ThemedView>
+
+                  {/* invoice link + invoice badge */}
+                  <ThemedView style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    {item.invoiceStatus ? (
+                      <Ionicons
+                        name="link"
+                        size={18}
+                        color={colors.iconColor}
+                        style={{ marginRight: 8 }}
+                      />
+                    ) : null}
+
+                    <ThemedView
+                      style={[
+                        styles.invoiceBadge,
+                        {
+                          backgroundColor: colors.accentColorMuted,
+                          borderColor: colors.accentColorMuted,
+                        },
+                      ]}
+                    >
+                      <ThemedText style={{ fontSize: 12, color: colors.buttonTextColor }}>
+                        {invoiceStatusLabel}
+                      </ThemedText>
+                    </ThemedView>
+                  </ThemedView>
+
+                </ThemedView>
+
+                {/* Customer Name */}
+                <ThemedText type="label" style={{ marginTop: 10, opacity: 0.5 }}>Customer:</ThemedText>
+                <ThemedText style={{ marginTop: 5 }}>{item.customerName}</ThemedText>
+                {item.orderReference && <ThemedText>Order Ref: {item.orderReference}</ThemedText>}
+
+                {/* Dates */}
+                <View style={{ flexDirection: 'row', marginTop: 20, marginBottom: 16 }}>
+                  {/* Left column: icons + dashed line */}
+                  <View style={{ alignItems: 'center' }}>
+                    {/* Order Received Icon */}
+                    <View style={[styles.statusIcon, { marginTop: 8, backgroundColor: colors.iconColor }]} >
+                      <Ionicons name="checkmark" size={12} color="#fff" />
+                    </View>
+
+                    {/* Dashed line with fixed height */}
+                    <View
+                      style={{
+                        width: 2,
+                        height: 23, // adjust to control dashed line spacing
+                        borderLeftWidth: 1,
+                        borderColor: colors.iconColor,
+                        borderStyle: 'dashed',
+                        marginVertical: 2,
+                      }}
+                    />
+
+                    {/* Invoice Issued Icon */}
+                    <View style={[
+                      styles.statusIcon,
+                      {
+                        backgroundColor: item.invoiceStatus ? "#769849ff" : colors.iconColor,
+                      }
+                    ]}>
+                      <Ionicons name={item.invoiceStatus ? "checkmark" : "close"} size={12} color="#fff" />
+                    </View>
+                  </View>
+
+                  {/* Right column: labels + dates */}
+                  <View style={{ marginLeft: 14, justifyContent: 'flex-start' }}>
+                    {/* Order Received */}
+                    <View style={{ marginBottom: 4 }}>
+                      <ThemedText type="label" style={{ opacity: 0.5 }}>Order Received:</ThemedText>
+                      <ThemedText style={{ fontSize: 14 }}>{new Date(item.orderDate).toLocaleDateString()}</ThemedText>
+                    </View>
+
+                    {/* Invoice Issued */}
+                    <View>
+                      <ThemedText type="label" style={{ marginTop: 6, opacity: 0.5 }}>Invoice Issued:</ThemedText>
+                      <ThemedText style={{ fontSize: 14 }}>
+                        {item.invoiceStatus
+                          ? new Date(item.orderDate).toLocaleDateString()
+                          : 'Invoice to be issued.'}
+                      </ThemedText>
+                    </View>
+                  </View>
+                </View>
+
+                {/* Goods Total */}
+                <ThemedText type="label" style={{ marginTop: 2, marginBottom: 6, opacity: 0.5 }}>Order Value:</ThemedText>
+                <View style={[styles.row, { marginBottom: 16 }]}>
+                  <ThemedText style={[{ fontWeight: 'bold' }]}>Total (Ex VAT):</ThemedText>
+                  <ThemedText style={[{ fontWeight: 'bold' }]}>£{((item.goods + item.carriage) * 1.2).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</ThemedText>
+                </View>
+
+                <Pressable
+                  onPress={() => toggleOrder(item.orderId)}
+                  style={[
+                    {
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginTop: 10,
+                      marginBottom: 6,
+                      paddingVertical: 8,
+                      paddingHorizontal: 12,
+                      borderRadius: 8,
+                      backgroundColor: colors.buttonBackgroundColor,
+                    },
+                  ]}
+                >
+                  {/* Left: text */}
+                  <ThemedText style={{ fontSize: 16 }}>
+                    {expandedOrders[item.orderId] ? 'Hide Items' : 'Show Items'}
+                  </ThemedText>
+
+                  {/* Right: chevron */}
+                  <Ionicons
+                    name={expandedOrders[item.orderId] ? 'chevron-up-outline' : 'chevron-down-outline'}
+                    size={16}
+                    color={colors.textColor}
+                  />
+                </Pressable>
+
+                {/* Conditionally render itemLines + carriage */}
+                {expandedOrders[item.orderId] && (
+                  <View style={{ marginTop: 16 }}>
+
+                    {/* Item lines */}
+                    {item.itemLines?.map(line => (
+                      <View
+                        key={line.itemID}
+                        style={[styles.row, { paddingHorizontal: 12, marginBottom: 4 }]}
+                      >
+                        <ThemedText style={{ flex: 1 }}>
+                          {line.qty} x {line.itemName}
+                        </ThemedText>
+                        <ThemedText>£{line.unitCost.toFixed(2)}</ThemedText>
+                      </View>
+                    ))}
+
+                    {/* Optional divider */}
+                    <View
+                      style={{
+                        height: 1,
+                        backgroundColor: colors.borderColor,
+                        marginTop: 4,
+                        marginBottom: 8,
+                        opacity: 0.4,
+                      }}
+                    />
+
+                    {/* Carriage */}
+                    <View style={[styles.row, { paddingHorizontal: 12, marginBottom: 8 }]}>
+                      <ThemedText style={{ flex: 1 }}>
+                        1 x Carriage ({shippingLabel})
+                      </ThemedText>
+                      <ThemedText>£{item.carriage.toFixed(2)}</ThemedText>
+                    </View>
+
+                  </View>
+                )}
+
+              </ThemedView>
+            </View>
+          </ThemedView>
+        </View>
+
+        {/* Footer */}
+        <Pressable
+          onPress={() => {}}
+          style={[
+            styles.cardFooter,
+            { borderTopColor: colors.borderColor },
+          ]}
+        >
           <ThemedText style={{ fontSize: 16 }}>
-            Order ID:{' '}
-            <ThemedText
-              type="defaultSemiBold"
-              style={{ color: colors.text }}
-            >
-              #{item.orderId}
-            </ThemedText>
+            View Details
           </ThemedText>
 
-          {/* invoice link + invoice badge */}
-          <ThemedView style={{ flexDirection: 'row', alignItems: 'center' }}>
-            {item.invoiceStatus ? (
-              <Ionicons
-                name="link"
-                size={18}
-                color={colors.icon}
-                style={{ marginRight: 8 }}
-              />
-            ) : null}
-
-            <ThemedView
-              style={[
-                styles.invoiceBadge,
-                {
-                  backgroundColor: invoiceStyles.backgroundColor,
-                  borderColor: invoiceStyles.borderColor,
-                },
-              ]}
-            >
-              <ThemedText style={{ fontSize: 12, color: invoiceStyles.textColor }}>
-                {invoiceStatusLabel}
-              </ThemedText>
-            </ThemedView>
-          </ThemedView>
-
-        </ThemedView>
-        <ThemedText type="label" style={{ marginTop: 8, opacity: 0.5 }}>Customer:</ThemedText>
-        <ThemedText style={{ marginTop: 5 }}>{item.customerName}</ThemedText>
-        {item.orderReference && <ThemedText>Order Ref: {item.orderReference}</ThemedText>}
-        {/*<ThemedText>Order Date: {new Date(item.orderDate).toLocaleDateString()}</ThemedText>*/}
-        <ThemedText type="label" style={{ marginTop: 18, marginBottom: 2, opacity: 0.5 }}>Item Lines:</ThemedText>
-        <View style={[styles.row, { marginTop: 6 }]}>
-          <ThemedText style={styles.itemLines}>Goods Value:</ThemedText>
-          <ThemedText style={[styles.itemLines, { fontWeight: 'normal' }]}>£{item.goods.toFixed(2)}</ThemedText>
-        </View>
-        <View style={styles.row}>
-          <ThemedText style={styles.itemLines}>Carriage: ({shippingLabel})</ThemedText>
-          <ThemedText style={[styles.itemLines, { fontWeight: 'normal' }]}>£{item.carriage.toFixed(2)}</ThemedText>
-        </View>
-        <View style={[styles.row, { marginBottom: 16 }]}>
-          <ThemedText style={[styles.itemLines, { fontWeight: 'bold' }]}>Total (Ex VAT):</ThemedText>
-          <ThemedText style={[styles.itemLines, { fontWeight: 'bold' }]}>£{(item.goods + item.carriage).toFixed(2)}</ThemedText>
-        </View>
-        {/*<ThemedText>Dispatch Date: {item.dispatchDate ? new Date(item.dispatchDate).toLocaleDateString() : 'N/A'}</ThemedText>*/}
-        {/*<ThemedButton title='View / Edit Order' textStyle={{ fontSize: 16 }} style={{ marginTop: 10, backgroundColor: colors.buttonColor }}></ThemedButton>*/}
-        <ThemedButton
-          title="Order Details"
-          textStyle={{ fontSize: 16 }}
-          style={{ marginTop: 10, backgroundColor: colors.buttonColor }}
-          icon={<Ionicons name="document-text-outline" size={16} color={colors.text} />}
-          type="accent"
-        />
+        </Pressable>
 
       </ThemedView>
     );
   }
 
   return (
-    <ScreenWrapper>
-      <ThemedView style={[styles.headerRow, { marginTop: 20 }]}>
-        <ThemedView style={{ marginRight: 3, marginBottom: 22, borderRadius: 4, backgroundColor: colors.background, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-          <Ionicons name="pulse-outline" size={22} color={colors.text} />
-        </ThemedView>
-        <ThemedText type="defaultSemiBold" style={styles.headerTitle}>
-          Active Orders ({orders.length} Found)
-        </ThemedText>
-      </ThemedView>
-      {/*<ThemedText type="defaultSemiBold" style={{ marginTop: 20, marginBottom: 20 }}>Active ({orders.length} Found)</ThemedText>*/}
+    <ScreenWrapper style={{ paddingHorizontal: 14 }}>
+      <ThemedText type="defaultSemiBold" style={{ marginTop: 20, marginBottom: 20, marginLeft: 8 }}>Active ({orders.length} Found)</ThemedText>
       <FlatList
         data={orders}
         keyExtractor={(item) => item.orderId.toString()}
@@ -169,15 +300,32 @@ export default function OrdersScreen() {
 
 const styles = StyleSheet.create({
   listContent: {
-    paddingBottom: 10,
+    paddingBottom: 0,
   },
+  // Main item container
   itemContainer: {
-    borderTopWidth: 0.6,
-    borderBottomWidth: 0,
-    padding: 16,
-    marginBottom: 6,
-    paddingHorizontal: 10,
-    //backgroundColor: "#222222"
+    paddingTop: 6,
+    paddingHorizontal: 0,
+    borderRadius: 16,
+    shadowColor: "rgba(0, 0, 0, 0.5)",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+    elevation: 3,
+  },
+  cardContent: {
+    paddingHorizontal: 14,
+    paddingTop: 16,
+    paddingBottom: 12,
+  },
+  cardFooter: {
+    alignItems: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 14,
+    borderTopWidth: 1,
+    backgroundColor: 'rgba(0,0,0,0.2)', // subtle contrast
+    borderBottomLeftRadius: 16,
+    borderBottomRightRadius: 16,
   },
   itemLines: {
     fontSize: 12,
@@ -208,5 +356,12 @@ const styles = StyleSheet.create({
   headerTitle: {
     marginLeft: 8, // spacing between logo and title
     marginBottom: 22,
+  },
+  statusIcon: {
+    width: 22,
+    height: 22,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
