@@ -1,9 +1,13 @@
 // src/utils/invoiceStatusStyles.ts
 
 export type InvoiceStatusStyle = {
-  backgroundColor: string;
-  borderColor: string;
-  textColor: string;
+  badgeStyle: {
+    backgroundColor: string;
+    borderColor: string;
+  },
+  textStyle: {
+    color: string;
+  }
 };
 
 export function getInvoiceStatusStyles(
@@ -18,37 +22,57 @@ export function getInvoiceStatusStyles(
     case 'PAIDFULL':
     case 'PAIDPART':
       return {
-        backgroundColor: '#769849',
-        borderColor: 'transparent',
-        textColor: '#ffffff',
+        badgeStyle: {
+          backgroundColor: '#769849',
+          borderColor: 'transparent',
+        },
+        textStyle: {
+          color: '#ffffff',
+        },
       };
 
     case 'SENT':
       return {
-        backgroundColor: '#4d57b1',
-        borderColor: 'transparent',
-        textColor: '#ffffff',
+        badgeStyle: {
+          backgroundColor: '#616161',
+          borderColor: 'transparent',
+        },
+        textStyle: {
+          color: '#ffffff',
+        },
       };
 
     case 'DRAFT':
       return {
-        backgroundColor: '#ff7d40',
-        borderColor: '#ff7d40',
-        textColor: '#ffffff',
+        badgeStyle: {
+          backgroundColor: '#ff7d40',
+          borderColor: '#ff7d40',
+        },
+        textStyle: {
+          color: '#ffffff',
+        },
       };
 
     case 'CREDIT':
       return {
-        backgroundColor: '#ff41d3',
-        borderColor: 'transparent',
-        textColor: '#ffffff',
+        badgeStyle: {
+          backgroundColor: '#ff41d3',
+          borderColor: 'transparent',
+        },
+        textStyle: {
+          color: '#ffffff',
+        },
       };
 
     default:
       return {
-        backgroundColor: '#cececeff',
-        borderColor: 'transparent',
-        textColor: '#000000',
+        badgeStyle: {
+          backgroundColor: '#cececeff',
+          borderColor: 'transparent',
+        },
+        textStyle: {
+          color: '#000000',
+        },
       };
   }
 }
