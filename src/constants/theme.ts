@@ -5,7 +5,7 @@ import { DarkTheme as NavigationDarkTheme, DefaultTheme as NavigationLightTheme,
 
 // Base colors
 const accentColor = "#ffaf1b";
-const accentColorMuted = "#ff8c0e";
+const accentColorMuted = "#ff8c0e"; // Original #ff8c0e / BDOMS primary - #ff6c37ff
 const tintColorLight = '#11181C';
 const tintColorDark = '#FFFFFF';
 const redColor = '#e43a36';
