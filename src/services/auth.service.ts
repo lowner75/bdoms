@@ -2,7 +2,7 @@
 
 import API from '../api/client';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import { setTokens, clearTokens } from '../api/client';
+import { setTokens, clearTokens, refreshAccessToken, clearAccessTokenOnly } from '../api/client';
 import { isBiometricAvailable, authenticateBiometric } from './biometrics.service';
 
 // --------------------
@@ -38,16 +38,21 @@ export async function loginWithBiometrics() {
   const authenticated = await authenticateBiometric();
   if (!authenticated) return null;
 
-  const accessToken = await EncryptedStorage.getItem('accessToken');
-  const refreshToken = await EncryptedStorage.getItem('refreshToken');
   const userStr = await EncryptedStorage.getItem('user');
+  if (!userStr) return null;
 
-  if (!accessToken || !refreshToken || !userStr) return null;
-
-  // Re-set tokens in API client to resume authenticated session
-  await setTokens(accessToken, refreshToken);
+  const newAccess = await refreshAccessToken();
+  if (!newAccess) return null;
 
   return JSON.parse(userStr);
+}
+
+// --------------------
+// Lock session
+// --------------------
+
+export async function lockSession() {
+  clearAccessTokenOnly();
 }
 
 // --------------------
