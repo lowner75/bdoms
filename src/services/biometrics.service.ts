@@ -8,12 +8,14 @@ export async function isBiometricAvailable() {
   const supported = await LocalAuthentication.supportedAuthenticationTypesAsync();
   const storedUser = await EncryptedStorage.getItem('user');
 
-  return hasHardware && supported.length > 0 && storedUser;
+  return hasHardware && supported.length > 0 && !!storedUser;
 }
 
 export async function authenticateBiometric() {
-  return await LocalAuthentication.authenticateAsync({
+  const result = await LocalAuthentication.authenticateAsync({
     promptMessage: 'Login with biometrics',
     fallbackLabel: 'Enter password',
   });
+
+  return result.success;
 }
