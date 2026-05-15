@@ -38,7 +38,7 @@ cd my-app
 npx expo install expo-dev-client
 ```
 
-## Run on Android to Check Initial Build Works
+## OPTIONAL: Run on Android to Check Initial Build Works
 
 ```bash
 npx expo prebuild
@@ -132,7 +132,7 @@ For development builds, run:
 
 ```bash
 npx expo prebuild
-adb uninstall com.lowner75.my-app # Only run this if you have an existing dev build on your emulator
+adb uninstall com.lowner75.my-app # Only run this if you have an existing dev build on your phone / emulator
 npx eas build --profile development --platform android # Don't forget to install on your emulator at the end, so it stays in sync
 npx expo start --dev-client --host lan # Or just npx expo start --dev-client
 ```
@@ -141,7 +141,7 @@ This will save you having to re-build your app with EAS every time you make chan
 
 ## Hot Reload Workflow
 
-1. Install dev client on emulator & phone
+1. Install dev client on phone / emulator (best on phone)
 2. Run: npx expo start --dev-client --host lan
 3. Edit code in VSCode
 4. Hot reload on both emulator & phone
