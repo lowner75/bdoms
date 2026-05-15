@@ -14,12 +14,13 @@ let isRefreshing = false;
 let refreshPromise: Promise<string | null> | null = null;
 
 // --------------------------------------------
-// Store & load tokens
+// Store, load and clear tokens
 // --------------------------------------------
 
 export async function setTokens(newAccess: string, newRefresh: string) {
   accessToken = newAccess;
   await EncryptedStorage.setItem('refreshToken', newRefresh);
+  const storedRefresh = await EncryptedStorage.getItem('refreshToken');
 }
 
 export async function clearTokens() {
@@ -31,11 +32,15 @@ async function getRefreshToken() {
   return await EncryptedStorage.getItem('refreshToken');
 }
 
+export function clearAccessTokenOnly() {
+  accessToken = null;
+}
+
 // --------------------------------------------
 // Refresh access token
 // --------------------------------------------
 
-async function refreshAccessToken(): Promise<string | null> {
+export async function refreshAccessToken(): Promise<string | null> {
   
   if (isRefreshing && refreshPromise) {
     return refreshPromise; // wait for ongoing refresh
@@ -85,7 +90,10 @@ API.interceptors.response.use(
   res => res,
 
   async error => {
-    if (error.response?.status === 401) {
+    if (
+      error.response?.status === 401 &&
+      !error.config.url?.includes('/refresh')
+    ) {
       const newAccess = await refreshAccessToken();
 
       if (newAccess) {
