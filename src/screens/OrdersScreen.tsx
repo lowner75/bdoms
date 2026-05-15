@@ -1,7 +1,7 @@
 // src/screens/OrdersScreen.tsx
 
 import React, { useState, useEffect } from 'react';
-import { FlatList, Image, Pressable, RefreshControl, StyleSheet, View } from 'react-native';
+import { FlatList, Pressable, RefreshControl, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { ThemedText } from '../components/ThemedText';
@@ -12,12 +12,14 @@ import { SHIPPING_METHOD_LABELS } from '../constants/shippingMethods';
 import { INVOICE_PAYMENT_STATUS_LABELS } from '../constants/invoicePaymentStatus';
 import { getInvoiceStatusStyles } from '../utils/invoiceStatusStyles';
 import { Ionicons } from '@expo/vector-icons';
+import { AlertModal } from '../components/AlertModal';
 
 export default function OrdersScreen() {
   const { colors } = useAppTheme();
   const navigation = useNavigation();
   const [orders, setOrders] = useState<IOrderSummary[]>([]);
   const [loading, setLoading] = useState(false);
+  const [alertData, setAlertData] = useState<{ title?: string; message: string } | null>(null);
 
   const [expandedOrders, setExpandedOrders] = useState<{ [id: string]: boolean }>({});
 
@@ -27,9 +29,14 @@ export default function OrdersScreen() {
 
   async function loadOrders() {
     setLoading(true);
-    const data = await fetchActiveOrders();
-    setOrders(data);
-    setLoading(false);
+    try {
+      const data = await fetchActiveOrders();
+      setOrders(data);
+    } catch (error: any) {
+      setAlertData({ title: 'Error', message: error.message || 'An error occurred while fetching orders' });
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -112,14 +119,10 @@ export default function OrdersScreen() {
 
                     <ThemedView
                       style={[
-                        styles.invoiceBadge,
-                        {
-                          backgroundColor: colors.accentColorMuted,
-                          borderColor: colors.accentColorMuted,
-                        },
+                        styles.invoiceBadge, invoiceStyles.badgeStyle,
                       ]}
                     >
-                      <ThemedText style={{ fontSize: 12, color: colors.buttonTextColor }}>
+                      <ThemedText style={[{ fontSize: 12 }, invoiceStyles.textStyle ]}>
                         {invoiceStatusLabel}
                       </ThemedText>
                     </ThemedView>
@@ -209,7 +212,7 @@ export default function OrdersScreen() {
                 >
                   {/* Left: text */}
                   <ThemedText style={{ fontSize: 16 }}>
-                    {expandedOrders[item.orderId] ? 'Hide Items' : 'Show Items'}
+                    {expandedOrders[item.orderId] ? 'Hide Item Lines' : 'Show Item Lines'}
                   </ThemedText>
 
                   {/* Right: chevron */}
@@ -230,10 +233,10 @@ export default function OrdersScreen() {
                         key={line.itemID}
                         style={[styles.row, { paddingHorizontal: 12, marginBottom: 4 }]}
                       >
-                        <ThemedText style={{ flex: 1 }}>
+                        <ThemedText style={{ flex: 1, fontSize: 14 }}>
                           {line.qty} x {line.itemName}
                         </ThemedText>
-                        <ThemedText>£{line.unitCost.toFixed(2)}</ThemedText>
+                        <ThemedText style={{ fontSize: 14 }}>£{line.unitCost.toFixed(2)}</ThemedText>
                       </View>
                     ))}
 
@@ -250,10 +253,10 @@ export default function OrdersScreen() {
 
                     {/* Carriage */}
                     <View style={[styles.row, { paddingHorizontal: 12, marginBottom: 8 }]}>
-                      <ThemedText style={{ flex: 1 }}>
-                        1 x Carriage ({shippingLabel})
+                      <ThemedText style={{ flex: 1, fontSize: 14 }}>
+                        Carriage ({shippingLabel})
                       </ThemedText>
-                      <ThemedText>£{item.carriage.toFixed(2)}</ThemedText>
+                      <ThemedText style={{ fontSize: 14 }}>£{item.carriage.toFixed(2)}</ThemedText>
                     </View>
 
                   </View>
@@ -266,14 +269,19 @@ export default function OrdersScreen() {
 
         {/* Footer */}
         <Pressable
-          onPress={() => {}}
+          onPress={() =>
+            setAlertData({
+              title: 'Coming Soon',
+              message: 'Order details will be available in a future update.',
+            })
+          }
           style={[
             styles.cardFooter,
             { borderTopColor: colors.borderColor },
           ]}
         >
           <ThemedText style={{ fontSize: 16 }}>
-            View Details
+            Order Details
           </ThemedText>
 
         </Pressable>
@@ -284,7 +292,9 @@ export default function OrdersScreen() {
 
   return (
     <ScreenWrapper style={{ paddingHorizontal: 14 }}>
+
       <ThemedText type="defaultSemiBold" style={{ marginTop: 20, marginBottom: 20, marginLeft: 8 }}>Active ({orders.length} Found)</ThemedText>
+      
       <FlatList
         data={orders}
         keyExtractor={(item) => item.orderId.toString()}
@@ -294,6 +304,19 @@ export default function OrdersScreen() {
         }
         contentContainerStyle={styles.listContent}
       />
+
+      <AlertModal
+        visible={!!alertData}
+        title={alertData?.title}
+        message={alertData?.message ?? ''}
+        buttons={[
+          {
+            text: 'OK',
+            onPress: () => setAlertData(null),
+          },
+        ]}
+      />
+
     </ScreenWrapper>
   );
 }
@@ -305,25 +328,25 @@ const styles = StyleSheet.create({
   // Main item container
   itemContainer: {
     paddingTop: 6,
-    paddingHorizontal: 0,
+    paddingHorizontal: 2,
     borderRadius: 16,
-    shadowColor: "rgba(0, 0, 0, 0.5)",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.5,
-    shadowRadius: 10,
-    elevation: 3,
   },
   cardContent: {
     paddingHorizontal: 14,
     paddingTop: 16,
     paddingBottom: 12,
+    shadowColor: "rgba(0, 0, 0, 0.5)",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.5,
+    shadowRadius: 3,
+    elevation: 5,
   },
   cardFooter: {
     alignItems: 'center',
     paddingVertical: 14,
     paddingHorizontal: 14,
     borderTopWidth: 1,
-    backgroundColor: 'rgba(0,0,0,0.2)', // subtle contrast
+    backgroundColor: 'rgba(0,0,0,0.1)', // subtle contrast
     borderBottomLeftRadius: 16,
     borderBottomRightRadius: 16,
   },
