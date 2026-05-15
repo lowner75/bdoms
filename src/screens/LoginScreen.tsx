@@ -29,7 +29,10 @@ export default function LoginScreen() {
   useEffect(() => {
     async function tryBiometricAutoLogin() {
       const user = await loginWithBiometrics();
-      if (user) setUser(user);
+
+      if (user) {
+        setUser(user);
+      }
     }
 
     tryBiometricAutoLogin();
@@ -37,7 +40,10 @@ export default function LoginScreen() {
 
   async function handleLogin() {
     try {
+      console.log('LOGIN BUTTON PRESSED');
       const user = await login(email, password);
+      console.log('LOGIN RETURNED USER:', !!user);
+      
       setUser(user);
     } catch (err: any) {
       setAlertData({ title: 'Login Failed', message: err.message || 'An error occurred' });
@@ -86,6 +92,7 @@ export default function LoginScreen() {
         message={alertData?.message ?? ""}
         buttons={[{ text: 'OK', onPress: () => setAlertData(null) }]}
       />
+      
     </ScreenWrapper>
   );
 }
